@@ -1,11 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documnrffent</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Luan!</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        transition: background-color 1s; /* Transição suave de cor de fundo */
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+    #mensagem {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 48px;
+        font-family: Arial, sans-serif;
+        color: #ff5f6d;
+        user-select: none;
+    }
+</style>
 </head>
 <body>
-    <h1>TESTE</h1>
+<canvas id="canvas"></canvas>
+<div id="mensagem">FELIZ ANIVERSÁRIO FIIII!!</div>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let colors = ['#ff5f6d', '#ff9966', '#ffff66', '#66ff66', '#50bfe6', '#ff6eff'];
+    let backgroundColors = ['#F0E68C', '#ADD8E6', '#FFA07A', '#98FB98', '#87CEFA']; // Cores de fundo suaves
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 5 + 2;
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.size > 0.2) this.size -= 0.1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    function init() {
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function handleParticles() {
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            if (particles[i].size <= 0.3) {
+                particles.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        handleParticles();
+        requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('mousemove', function(event) {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        for (let i = 0; i < 5; i++) {
+            particles.push(new Particle());
+        }
+    });
+
+    // Função para mudar a cor de fundo suavemente
+    function changeBackgroundColor() {
+        const randomIndex = Math.floor(Math.random() * backgroundColors.length);
+        document.body.style.backgroundColor = backgroundColors[randomIndex];
+    }
+
+    setInterval(changeBackgroundColor, 3000); // Mudança de cor a cada 3 segundos
+
+    const mensagem = document.getElementById('mensagem');
+    let mensagemAtual = 0;
+    const mensagens = [
+        "FELIZ ANIVERSÁRIO FIIII!!",
+        "ABADÍ ABADÁ ABADÚ",
+        "ABADÚ ABADÁ ABADÍ"
+    ];
+
+    mensagem.addEventListener('click', function() {
+        mensagemAtual = (mensagemAtual + 1) % mensagens.length;
+        mensagem.textContent = mensagens[mensagemAtual];
+    });
+</script>
 </body>
 </html>
